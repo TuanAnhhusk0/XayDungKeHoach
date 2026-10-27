@@ -1,6 +1,6 @@
 // Trí Planner service worker: lets the app open without internet once installed.
 // Bump VERSION whenever index.html changes so devices pick up the new copy.
-const VERSION = "tri-planner-v4";
+const VERSION = "tri-planner-v5";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest",
   "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png", "./favicon.png"];
 
@@ -29,7 +29,8 @@ self.addEventListener("fetch", e => {
   const url = new URL(req.url);
   // app page: try the network first so updates arrive, fall back to the saved copy offline
   if (req.mode === "navigate") {
-    e.respondWith(fetch(req).then(r => { const copy = r.clone(); caches.open(VERSION).then(c => c.put("./index.html", copy)); return r; })
+    // "no-cache" makes the browser re-check GitHub Pages, so a new upload shows up on the next open
+    e.respondWith(fetch(req, { cache: "no-cache" }).then(r => { const copy = r.clone(); caches.open(VERSION).then(c => c.put("./index.html", copy)); return r; })
       .catch(() => caches.match("./index.html")));
     return;
   }
