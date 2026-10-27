@@ -6,8 +6,8 @@
 <title>Trí Planner – Lập kế hoạch học tập</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#5b3fd6">
-<link rel="icon" type="image/png" href="icons/favicon.png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Trí Planner">
@@ -1066,7 +1066,7 @@ function alerts(p, now = new Date()) {
   return out.sort((a, b) => NK[a.kind][2] - NK[b.kind][2]);
 }
 async function sysNotify(a) {
-  const body = a.sub, opt = { body, icon: "icons/icon-192.png", badge: "icons/favicon.png", tag: a.key, data: { tab: a.go?.tab || 1 }, lang: "vi" };
+  const body = a.sub, opt = { body, icon: "icon-192.png", badge: "favicon.png", tag: a.key, data: { tab: a.go?.tab || 1 }, lang: "vi" };
   try {
     const reg = "serviceWorker" in navigator ? await navigator.serviceWorker.getRegistration() : null;
     if (reg) return reg.showNotification(a.title, opt);
