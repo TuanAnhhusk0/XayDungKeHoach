@@ -78,6 +78,8 @@
   .side h3 { font-size: 15px; font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .group { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; margin-top: 8px; font-size: 13px; line-height: 1.45; }
   .group b { display: block; font-size: 13.5px; }
+  .group .steps b { display: inline; font-size: inherit; }
+  .group .steps { display: block; margin-top: 4px; line-height: 1.6; }
   .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; margin-top: 4px; }
   .rule { display: flex; gap: 10px; align-items: center; font-size: 13.5px; font-weight: 600; padding: 7px 0; border-bottom: 1px dashed var(--line); }
   .rule:last-child { border-bottom: 0; }
@@ -255,8 +257,30 @@
     .rung .arrow { display: none; }
     .rung + .rung { border-left: 0; }
   }
+  .totop { position: fixed; right: 14px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 25; width: 46px; height: 46px; border-radius: 50%; border: 0;
+           background: var(--purple); color: #fff; font-size: 20px; font-weight: 800; box-shadow: 0 8px 20px rgba(28,22,92,.35); display: none; }
   @media (max-width: 720px) {
-    header { padding: 10px 14px; }
+    /* compact two-row bar that slides away once the page is scrolled */
+    header { padding: 8px 12px 8px; padding-top: max(8px, env(safe-area-inset-top)); gap: 8px; transition: transform .25s ease; }
+    header.hide { transform: translateY(-105%); }
+    body.barhidden .totop { display: grid; place-items: center; }
+    .logo { font-size: 18px; gap: 8px; }
+    .logo .mark { width: 32px; height: 32px; border-radius: 9px; }
+    .logo .mark svg { width: 18px; height: 18px; }
+    nav { order: 10; width: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 6px; margin: 0 -2px; }
+    nav::-webkit-scrollbar { display: none; }
+    nav button { flex: none; white-space: nowrap; padding: 7px 12px; font-size: 13px; }
+    nav button .n { width: 20px; height: 20px; font-size: 11px; }
+    #weekBtn, #sampleBtn { display: none; }
+    .hbtn { padding: 7px 10px; font-size: 12.5px; }
+    .bell > button { width: 36px; height: 36px; font-size: 16px; }
+    .avatar { width: 34px; height: 34px; font-size: 12px; border-width: 2px; }
+    .menu, .npanel { position: fixed; left: 10px; right: 10px; top: 60px; width: auto; max-width: none; }
+    h1 { font-size: 21px; gap: 8px; }
+    .vhead { margin-bottom: 12px; }
+    .tools .btn { padding: 8px 11px; }
+    .dialog { padding: 18px; border-radius: 18px; }
+    .banner { font-size: 12.5px; }
     main { padding: 16px 12px 30px; }
     .matrix { grid-template-columns: 1fr; grid-template-rows: none; }
     .axis { display: none; }
@@ -423,6 +447,7 @@
 <div class="overlay" id="ov"><div class="dialog" id="dlg"></div></div>
 <input type="file" id="fileIn" accept=".json,application/json" style="display:none">
 <div class="toast" id="toast"></div>
+<button class="totop" id="toTop" title="Lên đầu trang">↑</button>
 
 <script>
 const TKB = {"12C1":{"sang":[["SH","HĐTN-SHL","QP","Văn"],["Văn","Văn","Toán","Toán"],["Sinh","Sinh","GDTC","GDTC"],["Sử","Sử","Địa lý","Địa lý"],["Toán","Toán","Văn","Văn"],["Toán","Toán","Hóa","Hóa"]],"chieu":[["Văn","Văn","Anh","Anh"],["Tự chọn 1","Tự chọn 1","Tự chọn 2","Tự chọn 2"],["Vật lý","Vật lý","Vật lý","Anh"],["Toán","Toán","Hóa","GDĐP"],["Tự chọn 2","Tự chọn 2","Tự chọn 1","Tự chọn 1"],["","","",""]],"toi":["Toán","Toán","","","Văn","",""]},"12C2":{"sang":[["SH","HĐTN-SHL","Toán","Toán"],["Văn","Văn","Toán","Vật lý"],["Toán","Toán","Anh","Anh"],["Toán","Toán","Văn","Anh"],["GDĐP","Toán","Văn","Văn"],["QP","Hóa","Sử","Sử"]],"chieu":[["Văn","Văn","Sinh","Sinh"],["Tự chọn 1","Tự chọn 1","Tự chọn 2","Tự chọn 2"],["","","",""],["Hóa","Hóa","GDTC","GDTC"],["Tự chọn 2","Tự chọn 2","Tự chọn 1","Tự chọn 1"],["Vật lý","Vật lý","Địa lý","Địa lý"]],"toi":["Văn","","","","Toán","",""]},"12C3":{"sang":[["SH","HĐTN-SHL","Tự chọn 1","Tự chọn 1"],["Văn","Văn","Anh","Anh"],["Toán","Toán","Văn","Văn"],["QP","Tin","Toán","Toán"],["Tin","GDĐP","Toán","Toán"],["Toán","Toán","Sử","Sử"]],"chieu":[["Văn","Văn","Tự chọn 2","Tự chọn 2"],["","","",""],["Tự chọn 1","Tự chọn 1","Tự chọn 2","Tự chọn 2"],["Vật lý","Vật lý","Văn","Văn"],["GDKTPL","GDKTPL","GDTC","GDTC"],["Anh","Địa lý","Địa lý","Địa lý"]],"toi":["Toán","","Văn","","","",""]},"12C4":{"sang":[["SH","HĐTN-SHL","Toán","Toán"],["Toán","Địa lý","Địa lý","Địa lý"],["Văn","Văn","Tin","Tin"],["GDTC","GDTC","Anh","QP"],["Vật lý","Vật lý","Toán","Toán"],["Sử","Sử","Văn","Văn"]],"chieu":[["GDKTPL","GDKTPL","Văn","Văn"],["Tự chọn 1","Tự chọn 1","Tự chọn 2","Tự chọn 2"],["Anh","Anh","Văn","Văn"],["","","",""],["Tự chọn 2","Tự chọn 2","Tự chọn 1","Tự chọn 1"],["Toán","Toán","Toán","GDĐP"]],"toi":["Văn","","Toán","","Toán","",""]},"12C5":{"sang":[["SH","Địa lý","Tự chọn 1","Tự chọn 1"],["Trung","Trung","Văn","Văn"],["Toán","GDKTPL","Địa lý","Địa lý"],["Tin","QP","GDTC","GDTC"],["Toán","Toán","Văn","Văn"],["Văn","Văn","Toán","Toán"]],"chieu":[["Sử","Sử","Tự chọn 2","Tự chọn 2"],["","","",""],["Tự chọn 1","Tự chọn 1","Tự chọn 2","Tự chọn 2"],["Trung","Toán","Toán","Toán"],["Hóa","Hóa","Tin","HĐTN-SHL"],["Văn","Văn","GDĐP","GDKTPL"]],"toi":["Văn","","","","Toán","",""]},"12C6":{"sang":[["SH","HĐTN-SHL","GDKTPL","GDKTPL"],["Tự chọn 1","Tự chọn 1","Tự chọn 2","Tự chọn 2"],["Anh","Toán","Toán","Toán"],["","","",""],["Văn","Văn","GDTC","GDTC"],["Toán","Toán","QP","Địa lý"]],"chieu":[["Địa lý","Địa lý","Văn","Văn"],["Văn","Văn","Toán","Toán"],["Anh","Anh","Vật lý","Vật lý"],["Tự chọn 2","Tự chọn 2","Tự chọn 1","Tự chọn 1"],["Toán","GDĐP","Tin","Tin"],["Sử","Sử","Văn","Văn"]],"toi":["","Văn","Toán","","","",""]},"12C7":{"sang":[["SH","HĐTN-SHL","Tự chọn 1","Tự chọn 1"],["","","",""],["Địa lý","Địa lý","Văn","Văn"],["Văn","Văn","QP","Anh"],["Anh","Anh","Văn","Văn"],["Văn","Văn","Sử","Sử"]],"chieu":[["Toán","Toán","Tự chọn 2","Tự chọn 2"],["Tin","Tin","Toán","Toán"],["Tự chọn 1","Tự chọn 1","Tự chọn 2","Tự chọn 2"],["Toán","Toán","GDTC","GDTC"],["GDĐP","Vật lý","Toán","Toán"],["Sử","GDKTPL","GDKTPL","Vật lý"]],"toi":["Văn","Toán","","","","",""]},"12C8":{"sang":[["SH","HĐTN-SHL","Toán","Toán"],["Tự chọn 1","Tự chọn 1","Tự chọn 2","Tự chọn 2"],["Anh","Anh","Toán","Toán"],["Sử","Sử","Văn","Văn"],["Văn","Văn","Tin","Tin"],["Toán","QP","Văn","Văn"]],"chieu":[["Vật lý","Vật lý","GDĐP","Toán"],["GDTC","GDTC","Toán","Toán"],["","","",""],["Tự chọn 2","Tự chọn 2","Tự chọn 1","Tự chọn 1"],["GDKTPL","GDKTPL","Văn","Văn"],["Địa lý","Địa lý","Sử","Anh"]],"toi":["","Văn","Toán","","","",""]},"12C9":{"sang":[["SH","HĐTN-SHL","Văn","Văn"],["Tự chọn 1","Tự chọn 1","Tự chọn 2","Tự chọn 2"],["Hóa","Hóa","GDKTPL","GDKTPL"],["Toán","Toán","GDTC","GDTC"],["Toán","Toán","Địa lý","Địa lý"],["Văn","Văn","Toán","QP"]],"chieu":[["Văn","Văn","Toán","GDĐP"],["Anh","Anh","Sử","Sử"],["Văn","Văn","Sử","Anh"],["Tự chọn 2","Tự chọn 2","Tự chọn 1","Tự chọn 1"],["Tin","Tin","Toán","Toán"],["","","",""]],"toi":["","Toán","Văn","","","",""]},"11B1":{"sang":[["SH","HĐTN-SHL","Anh","Anh"],["Toán","Toán","Văn","Văn"],["QP","Anh","Văn","Văn"],["LC 1","LC 1","LC 2","LC 2"],["HĐTNHN","HĐTNHN","STEM","STEM"],["LC 3","LC 3","LC4","LC4"]],"chieu":[["Toán","Toán","GDTC","GDTC"],["Toán","Toán","Sử","GDĐP"],["","","",""],["Văn","Văn","Anh","Anh"],["Văn","Văn","Toán","Toán"],["","","",""]],"toi":["","Toán","","","","",""]},"11B2":{"sang":[["SH","HĐTN-SHL","Toán","Toán"],["STEM","STEM","Văn","Văn"],["Văn","Văn","Toán","Toán"],["LC 1","LC 1","LC 2","LC 2"],["Anh","Anh","Toán","Toán"],["LC 3","LC 3","LC4","LC4"]],"chieu":[["","","",""],["GDTC","GDTC","GDĐP","Văn"],["HĐTNHN","HĐTNHN","Anh","QP"],["Văn","Văn","Toán","Toán"],["Văn","Sử","Anh","Anh"],["","","",""]],"toi":["","","","","","",""]},"11B3":{"sang":[["SH","HĐTN-SHL","STEM","STEM"],["Toán","Toán","Trung","Trung"],["Văn","Văn","Sử","QP"],["LC 1","LC 1","LC 2","LC 2"],["Toán","Toán","GDĐP","NN2"],["LC 3","LC 3","LC4","LC4"]],"chieu":[["Văn","Văn","Trung","Trung"],["Văn","Văn","Trung","Trung"],["HĐTNHN","HĐTNHN","Toán","Toán"],["Toán","Toán","Văn","Văn"],["GDTC","GDTC","NN2","NN2"],["","","",""]],"toi":["","Trung","","","","Trung",""]},"11B4":{"sang":[["SH","HĐTN-SHL","Văn","Văn"],["Văn","Văn","STEM","STEM"],["Toán","Toán","QP","Sử"],["LC 1","LC 1","LC 2","LC 2"],["Anh","Anh","Toán","GDĐP"],["LC 3","LC 3","LC4","LC4"]],"chieu":[["","","",""],["","","",""],["GDTC","GDTC","HĐTNHN","HĐTNHN"],["Toán","Toán","Anh","Anh"],["Toán","Toán","Văn","Văn"],["","","",""]],"toi":["","","","","","",""]},"11B5":{"sang":[["HĐTNHN","HĐTNHN","Văn","Văn"],["","","",""],["","","",""],["LC 1","LC 1","LC 2","LC 2"],["Văn","Văn","Toán","Toán"],["LC 3","LC 3","LC4","LC4"]],"chieu":[["Anh","Anh","Văn","Văn"],["Anh","Anh","SH","HĐTN-SHL"],["Sử","Toán","Toán","Toán"],["GDTC","GDTC","Toán","Toán"],["STEM","STEM","GDĐP","QP"],["","","",""]],"toi":["Toán","","","","Văn","",""]},"10A1":{"sang":[["SH","HĐTN-SHL","Văn","Anh"],["Toán","Toán","Văn","Văn"],["Văn","Văn","Anh","Anh"],["","","",""],["","","",""],["Địa lý","Địa lý","STEM","STEM"]],"chieu":[["Sinh","Sinh","Toán","Toán"],["Hóa","Hóa","GDTC","GDTC"],["Vật lý","Sử","Toán","Toán"],["Văn","Văn","NN2","NN2"],["Vật lý","QP","Toán","Toán"],["HĐTNHN","HĐTNHN","GDĐP","NN2"]],"toi":["","","","","","",""]},"10A2":{"sang":[["Toán","Toán","GDKTPL","GDKTPL"],["","","",""],["Toán","Toán","HĐTNHN","HĐTNHN"],["GDTC","GDTC","STEM","STEM"],["","","",""],["Văn","Văn","NN2","NN2"]],"chieu":[["Trung","Trung","SH","HĐTN-SHL"],["Văn","Văn","Địa lý","Địa lý"],["Sinh","Sinh","Văn","Văn"],["NN2","Trung","Vật lý","Vật lý"],["QP","Toán","Toán","Toán"],["Trung","Trung","Sử","GDĐP"]],"toi":["","","","","","",""]},"10A3":{"sang":[["SH","HĐTN-SHL","GDTC","GDTC"],["Anh","Anh","HĐTNHN","HĐTNHN"],["Anh","QP","Tin","Tin"],["Văn","Văn","Toán","Toán"],["","","",""],["","","",""]],"chieu":[["Toán","Toán","Vật lý","Vật lý"],["Toán","Toán","Văn","Văn"],["Địa lý","Địa lý","GDKTPL","GDĐP"],["STEM","STEM","GDKTPL","Văn"],["NN2","NN2","Văn","Văn"],["Toán","Toán","NN2","Sử"]],"toi":["","","","","","",""]},"10A4":{"sang":[["SH","HĐTN-SHL","Toán","Toán"],["Vật lý","Vật lý","HĐTNHN","HĐTNHN"],["Địa lý","Địa lý","Toán","Toán"],["Anh","Anh","Toán","Toán"],["","","",""],["","","",""]],"chieu":[["GDTC","GDTC","QP","Văn"],["STEM","STEM","Văn","Văn"],["Tin","Tin","GDĐP","Sử"],["Văn","Văn","NN2","NN2"],["Văn","Văn","Toán","Toán"],["GDKTPL","GDKTPL","Anh","NN2"]],"toi":["","","","","","",""]},"10A5":{"sang":[["SH","HĐTN-SHL","Địa lý","Địa lý"],["Tin","Tin","Toán","Toán"],["STEM","STEM","GDKTPL","GDKTPL"],["Trung","Trung","Văn","Văn"],["Toán","GDĐP","HĐTNHN","HĐTNHN"],["NN2","NN2","Toán","Toán"]],"chieu":[["Vật lý","Vật lý","Toán","Toán"],["Sử","Trung","Văn","Văn"],["QP","NN2","Trung","Trung"],["","","",""],["","","",""],["Văn","Văn","GDTC","GDTC"]],"toi":["","","","","","",""]},"10A6":{"sang":[["Địa lý","Văn","Anh","Sử"],["","","",""],["","","",""],["Văn","Văn","Toán","Toán"],["GDĐP","Địa lý","Anh","Anh"],["Hóa","Hóa","Toán","Toán"]],"chieu":[["Văn","Văn","SH","HĐTN-SHL"],["GDKTPL","GDKTPL","Toán","Toán"],["Văn","QP","Sinh","Sinh"],["Anh","Anh","STEM","STEM"],["NN2","NN2","HĐTNHN","HĐTNHN"],["GDTC","GDTC","NN2","Toán"]],"toi":["","","","","","",""]},"10A7":{"sang":[["STEM","STEM","Văn","Văn"],["HĐTNHN","HĐTNHN","Tin","Tin"],["","","",""],["Toán","Toán","Văn","Sử"],["","","",""],["Anh","GDĐP","GDKTPL","GDKTPL"]],"chieu":[["QP","Toán","SH","HĐTN-SHL"],["Toán","Toán","Sinh","Sinh"],["Địa lý","Địa lý","GDTC","GDTC"],["","","",""],["Anh","Anh","NN2","Toán"],["NN2","NN2","Văn","Văn"]],"toi":["","","","","","",""]},"10A8":{"sang":[["GDTC","GDTC","Sử","QP"],["Toán","Toán","HĐTNHN","HĐTNHN"],["Văn","Tin","Địa lý","Địa lý"],["","","",""],["Hóa","Hóa","GDKTPL","GDKTPL"],["GDĐP","Anh","Toán","Toán"]],"chieu":[["Văn","Văn","SH","HĐTN-SHL"],["","","",""],["","","",""],["Anh","Anh","Văn","Văn"],["Toán","Toán","NN2","Tin"],["NN2","NN2","STEM","STEM"]],"toi":["","","","","","",""]}};
@@ -641,6 +666,7 @@ function buildMenu() {
     list.map(p => `<button data-id="${p.id}" class="${p.id === S.current ? "cur" : ""}"><span class="avatar" style="width:28px;height:28px;font-size:11px;border-width:2px;background:${p.sample ? "var(--yellow)" : "var(--cyan)"}">${esc(initials(p.name))}</span>${esc(p.name)}${p.sample ? " (mẫu)" : ""} <span class="sub" style="margin:0 0 0 auto">${esc(p.cls || "")}</span></button>`).join("") +
     `<button data-act="new">➕ Tạo kế hoạch mới</button><hr>
      <button data-act="info">✏️ Đổi tên / lớp</button>
+     <button data-act="week">🗓️ Chọn tuần (${esc(weekLabel(P()))})</button>
      <button data-act="next">📅 Sang tuần mới</button>
      <button data-act="export">💾 Xuất file kế hoạch</button>
      <button data-act="import">📂 Mở file kế hoạch</button>
@@ -656,6 +682,7 @@ $("#menu").onclick = async e => {
   if (b.dataset.id) return switchTo(b.dataset.id);
   const p = P(), a = b.dataset.act;
   if (a === "new") welcome(false);
+  if (a === "week") $("#weekBtn").click();
   if (a === "info") {
     const r = await modal("Thông tin của em", [{ k: "name", label: "Họ và tên", value: p.name },
       { k: "cls", label: "Lớp", type: "select", value: p.cls, options: [...Object.keys(TKB).map(c => [c, c]), ["", "Lớp khác"]] },
@@ -1149,13 +1176,35 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden) chec
 if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener?.("message", e => { if (e.data?.tab) show(e.data.tab); });
 
 /* ---------- install as an app (PWA) ---------- */
-const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+// inside the installed app (PWA or the Android APK, which opens with an android-app:// referrer) there is nothing to install
+const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone || document.referrer.startsWith("android-app://");
 let installEvt = null;
 addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; if (!standalone) $("#installBtn").style.display = ""; });
 addEventListener("appinstalled", () => { $("#installBtn").style.display = "none"; toast("Đã cài Trí Planner – mở từ màn hình chính nhé!"); });
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-if (isIOS && !standalone) $("#installBtn").style.display = "";
+const isAndroid = /Android/i.test(navigator.userAgent);
+const APK = "TriPlanner.apk";
+if ((isIOS || isAndroid) && !standalone) $("#installBtn").style.display = "";
+async function apkReady() {
+  try { const r = await fetch(APK, { method: "HEAD", cache: "no-store" }); return r.ok && +(r.headers.get("content-length") || 1) > 0; } catch (e) { return false; }
+}
+function androidDialog(hasApk) {
+  const d = $("#dlg"); d.className = "dialog";
+  d.innerHTML = `<h2>📲 Cài Trí Planner cho Android</h2>
+    ${hasApk ? `<a class="btn primary" href="${APK}" download="TriPlanner.apk" style="width:100%;justify-content:center;font-size:16px;padding:14px;text-decoration:none">⬇️ Tải file cài đặt TriPlanner.apk</a>
+    <div class="group" style="background:var(--soft)"><span class="dot" style="background:var(--purple)"></span><div><b>Sau khi tải xong</b><span class="steps">1. Mở thông báo <b>Đã tải xuống</b> (hoặc ứng dụng <b>Tệp</b>) → bấm <b>TriPlanner.apk</b>.<br>
+      2. Nếu máy hỏi, bấm <b>Cài đặt</b> → cho phép <b>Cài ứng dụng không rõ nguồn gốc</b> cho trình duyệt → quay lại bấm <b>Cài đặt</b>.<br>
+      3. Nếu Google Play Protect cảnh báo, chọn <b>Vẫn cài đặt</b> (app của trường, không qua CH Play).</span></div></div>`
+      : `<div class="group" style="background:#fff3d6"><span class="dot" style="background:var(--orange)"></span><div><b>File APK chưa có</b><span class="steps">Thầy cô chưa tải file cài đặt lên. Em dùng cách cài nhanh bên dưới nhé.</span></div></div>`}
+    ${installEvt ? `<button class="btn" id="pwaNow" style="width:100%;justify-content:center;margin-top:8px">⚡ Cài nhanh không cần tải file</button>` :
+      `<div class="group" style="background:var(--soft)"><span class="dot" style="background:var(--pink)"></span><div><b>Cách khác (không cần tải file)</b><span class="steps">Trong Chrome bấm menu ⋮ → <b>Thêm vào màn hình chính</b> / <b>Cài đặt ứng dụng</b>.</span></div></div>`}
+    <div class="dactions"><button class="btn" onclick="closeModal()">Đóng</button></div>`;
+  $("#ov").classList.add("open");
+  const q = d.querySelector("#pwaNow");
+  if (q) q.onclick = async () => { closeModal(); installEvt.prompt(); await installEvt.userChoice; installEvt = null; };
+}
 $("#installBtn").onclick = async () => {
+  if (isAndroid) return androidDialog(await apkReady());
   if (installEvt) { installEvt.prompt(); await installEvt.userChoice; installEvt = null; $("#installBtn").style.display = "none"; return; }
   const d = $("#dlg"); d.className = "dialog";
   d.innerHTML = `<h2>📲 Cài Trí Planner lên máy</h2>
@@ -1165,6 +1214,21 @@ $("#installBtn").onclick = async () => {
     <div class="dactions"><button class="btn primary" onclick="closeModal()">Đã hiểu</button></div>`;
   $("#ov").classList.add("open");
 };
+/* ---------- phone: top bar hides once scrolled, comes back at the very top ---------- */
+const phone = matchMedia("(max-width: 720px)");
+function barCheck() {
+  const h = document.querySelector("header");
+  const busy = $("#menu").classList.contains("open") || $("#npanel").classList.contains("open");
+  const hide = phone.matches && scrollY > Math.max(40, h.offsetHeight) && !busy;
+  if (phone.matches && scrollY <= 8) h.classList.remove("hide");
+  else if (hide) h.classList.add("hide");
+  if (!phone.matches) h.classList.remove("hide");
+  document.body.classList.toggle("barhidden", h.classList.contains("hide"));
+}
+addEventListener("scroll", barCheck, { passive: true });
+phone.addEventListener?.("change", barCheck);
+$("#toTop").onclick = () => scrollTo({ top: 0, behavior: "smooth" });
+
 if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
   addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => { }));
 }

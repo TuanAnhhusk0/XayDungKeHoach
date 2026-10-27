@@ -1,6 +1,6 @@
 // Trí Planner service worker: lets the app open without internet once installed.
 // Bump VERSION whenever index.html changes so devices pick up the new copy.
-const VERSION = "tri-planner-v3";
+const VERSION = "tri-planner-v4";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest",
   "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png", "./favicon.png"];
 
